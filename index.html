@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Impressão de Pulseira - DIRAD</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+    :root {
+      --fundo: #efe0b2;
+      --cartao: #fff9cc;
+      --marrom: #7a5417;
+      --marrom-escuro: #5a3c0d;
+      --hover: #a07225;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--fundo);
+      margin: 0;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background-color: var(--cartao);
+      border: 1px solid #d2b675;
+      padding: 20px 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      width: 320px;
+    }
+
+    h3 {
+      margin-top: 0;
+      font-size: 16px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--marrom);
+      text-align: center;
+      background-color: #fffbd9;
+      border-radius: 6px;
+      padding: 10px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--marrom-escuro);
+    }
+
+    input {
+      width: 100%;
+      padding: 6px;
+      font-size: 13px;
+      margin-top: 4px;
+      border: 1px solid #c2a35d;
+      border-radius: 5px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    input:focus {
+      border-color: var(--marrom);
+      box-shadow: 0 0 3px #d2b675;
+    }
+
+    .btn {
+      margin-top: 15px;
+      padding: 10px;
+      width: 100%;
+      background-color: var(--marrom);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.1s;
+    }
+
+    .btn:hover {
+      background-color: var(--hover);
+      transform: scale(1.02);
+    }
+
+    .print-area {
+      font-size: 12px;
+      line-height: 1.4;
+      color: #000;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 30px;
+      color: var(--marrom-escuro);
+      font-size: 12px;
+    }
+
+    /* ---- CONFIGURAÇÃO DE IMPRESSÃO ---- */
+    @page {
+      size: 20mm 240mm;
+      margin: 0;
+    }
+
+    @media print {
+      body {
+        background: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container, .btn, label, input, footer {
+        display: none;
+      }
+
+      .print-area {
+        display: block;
+        width: 20mm;
+        height: 240mm;
+        margin: 0;
+        padding: 0;
+      }
+
+      p {
+        margin: 0;
+        padding: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h3>DIRAD DIAGNÓSTICO POR IMAGENS</h3>
+
+    <label for="atendimento">Atendimento:</label>
+    <input type="text" id="atendimento">
+
+    <label for="nome">Nome:</label>
+    <input type="text" id="nome">
+
+    <label for="nasc">Nasc:</label>
+    <input type="text" id="nasc" maxlength="10" placeholder="dd/mm/aaaa">
+
+    <label for="mae">Mãe:</label>
+    <input type="text" id="mae">
+
+    <button class="btn" onclick="gerarImpressao()">Imprimir</button>
+  </div>
+
+  <div id="print" class="print-area" style="display:none;">
+    <p><strong>DIRAD DIAGNÓSTICO POR IMAGENS</strong></p>
+    <p><strong>ATENDIMENTO:</strong> <span id="pAtendimento"></span></p>
+    <p><strong>NOME:</strong> <span id="pNome"></span></p>
+    <p><strong>Nasc:</strong> <span id="pNasc"></span></p>
+    <p><strong>MÃE:</strong> <span id="pMae"></span></p>
+  </div>
+
+  <footer>© 2024–2025 Dirad. Todos os direitos reservados.</footer>
+
+  <script>
+    // Máscara automática para data de nascimento (dd/mm/aaaa)
+    const nascInput = document.getElementById("nasc");
+    nascInput.addEventListener("input", function (e) {
+      let valor = e.target.value.replace(/\D/g, ""); // remove tudo que não for número
+      if (valor.length > 8) valor = valor.slice(0, 8); // limita a 8 dígitos
+
+      if (valor.length > 4) {
+        valor = valor.replace(/(\d{2})(\d{2})(\d{1,4})/, "$1/$2/$3");
+      } else if (valor.length > 2) {
+        valor = valor.replace(/(\d{2})(\d{1,2})/, "$1/$2");
+      }
+      e.target.value = valor;
+    });
+
+    function gerarImpressao() {
+      document.getElementById('pAtendimento').textContent = document.getElementById('atendimento').value;
+      document.getElementById('pNome').textContent = document.getElementById('nome').value;
+      document.getElementById('pNasc').textContent = document.getElementById('nasc').value;
+      document.getElementById('pMae').textContent = document.getElementById('mae').value;
+
+      document.getElementById('print').style.display = 'block';
+      window.print();
+      document.getElementById('print').style.display = 'none';
+    }
+  </script>
+
+</body>
+</html>
