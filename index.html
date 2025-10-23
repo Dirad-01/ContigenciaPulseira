@@ -96,6 +96,14 @@
       font-size: 12px;
       line-height: 1.4;
       color: #000;
+      writing-mode: horizontal-tb;
+    }
+
+    .print-area p {
+      margin: 0;
+      padding: 0;
+      white-space: nowrap;
+      overflow: hidden;
     }
 
     footer {
@@ -107,7 +115,7 @@
 
     /* ---- CONFIGURAÇÃO DE IMPRESSÃO ---- */
     @page {
-      size: 20mm 240mm;
+      size: 240mm 20mm; /* horizontal */
       margin: 0;
     }
 
@@ -123,16 +131,20 @@
       }
 
       .print-area {
-        display: block;
-        width: 20mm;
-        height: 240mm;
+        display: block;       /* cada <p> embaixo do outro */
+        width: 240mm;
+        height: 20mm;
         margin: 0;
         padding: 0;
+        writing-mode: horizontal-tb;
+        font-size: 10px;      /* fonte reduzida para caber */
       }
 
-      p {
+      .print-area p {
         margin: 0;
         padding: 0;
+        white-space: nowrap;
+        overflow: hidden;
       }
     }
   </style>
@@ -168,11 +180,10 @@
   <footer>© 2024–2025 Dirad. Todos os direitos reservados.</footer>
 
   <script>
-    // Máscara automática para data de nascimento (dd/mm/aaaa)
     const nascInput = document.getElementById("nasc");
     nascInput.addEventListener("input", function (e) {
-      let valor = e.target.value.replace(/\D/g, ""); // remove tudo que não for número
-      if (valor.length > 8) valor = valor.slice(0, 8); // limita a 8 dígitos
+      let valor = e.target.value.replace(/\D/g, "");
+      if (valor.length > 8) valor = valor.slice(0, 8);
 
       if (valor.length > 4) {
         valor = valor.replace(/(\d{2})(\d{2})(\d{1,4})/, "$1/$2/$3");
